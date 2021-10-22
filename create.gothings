@@ -1,7 +1,7 @@
 #!/bin/bash
 #                                                                    2020-03-12
 #    GOTHINGS su linux PC
-                                                                  Version="0.03"
+                                                                  Version="0.04"
 #  NOTA: primo tentativo sul PC locale
 #
 #
@@ -44,7 +44,7 @@ AppDisplayName="GoThings"
 HomeDir="~/"
 DockDir="${HomeDir}dockrepo/"
 AppDir="${DockDir}sysdata/${AppName}/"
-FileName= "localserverdirs.tar.gz"
+FileName="localserverdirs.tar.gz"
 GitFile="https://github.com/fpirri/gothings-localserver/blob/master/${FileName}"
 LocalFile="${DockDir}${FileName}"
 # ----------------------------------

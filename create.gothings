@@ -1,0 +1,270 @@
+#!/bin/bash
+#                                                                    2020-03-12
+#    GOTHINGS su linux PC
+                                                                  Version="0.03"
+#  NOTA: primo tentativo sul PC locale
+#
+#
+#
+#  Vedi doc in:
+#    .../github-gothings/gothings-scratchpad/README.DaRicordare
+#         <-- cerca:      Progetto localserver  |
+#
+#===============================================================================
+#                                                                 Organizzazione
+#
+#    passa il controllo a ~/dockrepo/sysdata/localserver/localserver-go
+#
+#
+#
+################################################################################
+#
+#==============================================================================
+echo
+echo "========================================================= local GOTHINGS"
+echo
+echo "      GOTHINGS boot loader for PC on things LAN"
+echo
+echo "========================================================= version ${Version}"
+echo
+#
+################################################################################
+#                                                                variabili utili
+# ----------------------------------
+# Mode: DEBUG
+DebugMode=1                     # 0 == NO debug     > 0 == Show debug info
+#
+# ----------------------------------
+# Define app
+AppName="local-gothings"
+AppDisplayName="GoThings"
+#
+# ----------------------------------
+# variabili interne
+HomeDir="~/"
+DockDir="${HomeDir}dockrepo/"
+AppDir="${DockDir}sysdata/${AppName}/"
+FileName= "localserverdirs.tar.gz"
+GitFile="https://github.com/fpirri/gothings-localserver/blob/master/${FileName}"
+LocalFile="${DockDir}${FileName}"
+# ----------------------------------
+# costanti varie
+Red='\033[0;41;30m'
+Std='\033[0;0;39m'
+#
+#
+##########################################################################
+#  Funzioni utili
+##########################################################################
+avanti(){
+# Domanda di continuazione personalizzabile
+# call:    avanti \$1
+#   \$1:   <stringa di domanda>
+  echo "----------------------------------------------------------------"
+  read -rsp "$1" -n 1 key
+  echo
+}
+#
+pause() {
+#  Domanda 'continue or exit'
+  avanti 'Press any key to continue or ^C to exit ...'
+}
+#
+##########################################################################
+dots(){
+# wait $1 seconds, printing dots on the screen
+#   $1 :  # of seconds to wait
+  local param1
+  printf -v param1 '%d\n' $1 2>/dev/null # converti in intero con tutti i controlli
+  while [ $param1 -gt 0 ]
+  do
+    echo -n "."
+    sleep 0.5
+    echo -n "."
+    sleep 0.5
+    let "--param1"
+  done
+}
+#
+##########################################################################
+dots_nl(){ #  Dots 'new line'
+# wait $1 seconds, printing dots on the screen
+#
+# add a newline at the end
+#
+  dots $1
+  echo
+}
+#
+################################################################################
+#                                                                avvisi iniziali
+echo
+echo "This script downloads the archive:"
+echo "  localserver.tar.gz"
+echo "from github and expand it to the ~/dockrepo directory of this machine."
+echo
+echo "Please read the README.md file on"
+echo "  https://github.com/fpirri/gothings-localserver"
+echo "for an explanation of the operations that will be performed."
+echo "At the end, the user will be able to verify the operations carried out"
+echo "and execute the script for creating the local web server."
+echo "Your sudo password will be asked for in the following."
+echo
+echo "You should have Docker installed on your system."
+echo "Let's verify the docker installation:"
+sudo docker version
+DockerOk=$?
+echo
+if [ $DockerOk -gt 0 ]
+then
+  echo "docker not running!"
+  echo "Please install docker in your PC"
+  echo ""
+  return 1
+  echo "-------"
+  exit
+fi
+#
+################################################################################
+#                                                            create dockrepo dir
+if [[ ! -s "${DockDir}" ]]; then
+  mkdir ${DockDir}
+fi
+echo ""
+echo "Archive name on github:
+echo "    $GitFile}"
+echo "Local archive file"
+echo "    ${LocalFile} $GitFile
+wget -O ${LocalFile} $GitFile
+echo
+if [[ -s $LocalFile ]]; then
+  echo "The archive file exists, expand it"
+else
+  echo "File $LocalFile not found, stop processing"
+  echo
+  return 1
+  echo "-------"
+  exit
+fi
+# Creazione archivio
+#    sudo tar -czvpf "${NameTar}" dockrepo/dockimages/ dockrepo/sysdata/ dockrepo/sysconfig/
+
+#    sudo tar -czvpf "~/folderdiprova.tar.gz" folderdiprova/filediprova/
+#    sudo tar -czvpf ~/"folderdiprova.tar.gz" ~/"folderdiprova/"
+
+#superman@vmatic2020:~$ tar -czvpf ~/"folderdiprova.tar.gz" ~/"folderdiprova/"
+#tar: Removing leading `/' from member names
+#/home/superman/folderdiprova/
+#/home/superman/folderdiprova/filediprova
+#superman@vmatic2020:~$ 
+#    tar -czvpf "folderdiprova.tar.gz" ~/"folderdiprova/"
+
+
+
+
+#   si espande l'archivio
+#  sudo tar xpf "folderdiprova.tar.gz" -C "~/"
+sudo tar xpf "${LocalFile}" -C "$HomeDir" #   si espande l'archivio
+
+
+
+pause
+echo "verifica l'espansione"
+echo ""
+return 1
+exit
+
+
+#
+##########################################################################
+gotocontrol(){
+# 8.  download & exec 'go-raspi'
+  SECONDS=0
+  echo 
+  echo 
+  echo "-------------------------------------------------------------- 8:"
+  echo "Preparing for GOTHINGS CONTROL MENU"
+  echo
+  GoFile="go-raspi"
+  GITBR="gothings-raspi-install/master/"  # dir su github dove va preso il file
+  PIDIR=""                          # path da aggiungere a HOMEDIR == /home/pi/
+  CALL="${GoFile} $GITBR $PIDIR"
+  getgitfile ${CALL}
+  if [[ $ITEXISTS -ne 1 ]]
+  then ########## DA FARE se il file MANCA  (caso 'interrompi TUTTO' e si esce dal menu)
+    echo 
+    echo "------------------------------------------------------"
+    echo -e "${RED} ERROR on file: ${GoFile} - debug message: ${STD}"
+    echo $DEBUGLOG
+    echo "------------------------------------------------------"
+    echo "Cannot continue."
+    echo 
+    MENUTRAP=66
+    return 66
+  fi ########## Si va avanti se il file esiste ...
+  #
+  chmod +x /home/pi/${GoFile}
+  #
+  TIME8=${SECONDS}
+  echo
+  echo "Elapsed time:"
+  printms ${TIME8} "8. Load go-raspi"
+  echo "--------------------------------------------------------------"
+  echo
+  sleep 3
+  echo
+  echo "Now ready to exec GOTHINGS CONTROL MENU"
+  echo "    NOTE: if you continue the GOTHINGS CONTROL MENU will be executed"
+  echo
+  echo -e "    ${RED}  ATTENTION !!  ${STD} "
+  echo "    continue will bring you to the GOTHINGS CONTROL MENU"
+  echo "    exit return back to the console prompt"
+  echo
+  avanti
+  ./${GoFile}
+  echo "exit from 0 / boot install"
+  MENUTRAP=66
+}
+#
+###################################################################
+#
+
+
+
+
+#
+################################################################################
+#                                                  creazione dei docker networks
+echo ""
+echo "Creazione dei docker networks for gothings"
+echo ""
+echo
+echo
+echo "- gothingsnet"
+sudo docker network create -d bridge --subnet 172.29.196.0/24 --gateway 172.29.196.1 gothingsnet  
+echo "- servicenet"
+sudo docker network create -d bridge --subnet 172.29.195.0/24 --gateway 172.29.195.1 servicenet
+echo 
+
+#
+################################################################################
+#                                                        
+
+echo ""
+echo ""
+echo ""
+pause
+echo ""
+echo ""
+return 1
+exit
+
+
+#
+################################################################################
+#                                                        
+
+    echo ""
+    return 1
+    exit
+

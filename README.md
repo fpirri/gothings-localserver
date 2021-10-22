@@ -1,7 +1,8 @@
-# GoThings Raspi Basezero
-Get GoThings services on your raspi
+# GoThings local server
+Get http services on your PC
 
-You will use docker services installed on the Raspberry board  
+You will use docker containers from the GoThings Project and collaborate with your things.  
+The Gothings Project can use your raspberry board exploiting your own things.
 <br />
 
 ADVICE:
@@ -15,11 +16,12 @@ Owing to the above, please be aware it may be difficult to use this repository t
 Anyway, the original work included may be used according to the permissible MIT License.  
 
 Please read the [disclaimer](#disclaimer) for more information  
-<br/>
+  
+----
+Please note the following has to be revised with the actual development software  
 
-Please note the following has to be adapted from the internal development version
 internal step 05
-<br/>
+  
 
 ----
 [What GoThings Raspi BaseZero does](#what-gothings-raspi-basezero-does)  

@@ -41,12 +41,12 @@ AppDisplayName="GoThings"
 #
 # ----------------------------------
 # variabili interne
-HomeDir="~/"
+HomeDir=~/
 DockDir="${HomeDir}dockrepo/"
 AppDir="${DockDir}sysdata/${AppName}/"
 FileName="localserverdirs.tar.gz"
 GitFile="https://github.com/fpirri/gothings-localserver/blob/master/${FileName}"
-LocalFile="${DockDir}${FileName}"
+LocalFile="${HomeDir}${FileName}"
 # ----------------------------------
 # costanti varie
 Red='\033[0;41;30m'
@@ -124,21 +124,21 @@ then
   echo "-------"
   exit
 fi
+dots 2
 #
 ################################################################################
-#                                                            create dockrepo dir
-if [[ ! -s "${DockDir}" ]]; then
-  mkdir ${DockDir}
-fi
+#
+echo "No errors found"
 echo ""
-echo "Archive name on github:
-echo "    $GitFile}"
-echo "Local archive file"
-echo "    ${LocalFile} $GitFile
+echo "archive to read from github:"
+echo "    ${GitFile}"
+echo "into local file"
+echo "    ${LocalFile}"
+echo
 wget -O ${LocalFile} $GitFile
 echo
 if [[ -s $LocalFile ]]; then
-  echo "The archive file exists, expand it"
+  echo "The archive file exists, you can expand it"
 else
   echo "File $LocalFile not found, stop processing"
   echo
@@ -146,24 +146,13 @@ else
   echo "-------"
   exit
 fi
-# Creazione archivio
-#    sudo tar -czvpf "${NameTar}" dockrepo/dockimages/ dockrepo/sysdata/ dockrepo/sysconfig/
-
-#    sudo tar -czvpf "~/folderdiprova.tar.gz" folderdiprova/filediprova/
-#    sudo tar -czvpf ~/"folderdiprova.tar.gz" ~/"folderdiprova/"
-
-#superman@vmatic2020:~$ tar -czvpf ~/"folderdiprova.tar.gz" ~/"folderdiprova/"
-#tar: Removing leading `/' from member names
-#/home/superman/folderdiprova/
-#/home/superman/folderdiprova/filediprova
-#superman@vmatic2020:~$ 
-#    tar -czvpf "folderdiprova.tar.gz" ~/"folderdiprova/"
+dots 3
+echo " domanda di espansione DA FARE"
 
 
-
-
+exit
 #   si espande l'archivio
-#  sudo tar xpf "folderdiprova.tar.gz" -C "~/"
+
 sudo tar xpf "${LocalFile}" -C "$HomeDir" #   si espande l'archivio
 
 
@@ -177,59 +166,11 @@ exit
 
 #
 ##########################################################################
-gotocontrol(){
-# 8.  download & exec 'go-raspi'
-  SECONDS=0
-  echo 
-  echo 
-  echo "-------------------------------------------------------------- 8:"
-  echo "Preparing for GOTHINGS CONTROL MENU"
-  echo
-  GoFile="go-raspi"
-  GITBR="gothings-raspi-install/master/"  # dir su github dove va preso il file
-  PIDIR=""                          # path da aggiungere a HOMEDIR == /home/pi/
-  CALL="${GoFile} $GITBR $PIDIR"
-  getgitfile ${CALL}
-  if [[ $ITEXISTS -ne 1 ]]
-  then ########## DA FARE se il file MANCA  (caso 'interrompi TUTTO' e si esce dal menu)
-    echo 
-    echo "------------------------------------------------------"
-    echo -e "${RED} ERROR on file: ${GoFile} - debug message: ${STD}"
-    echo $DEBUGLOG
-    echo "------------------------------------------------------"
-    echo "Cannot continue."
-    echo 
-    MENUTRAP=66
-    return 66
-  fi ########## Si va avanti se il file esiste ...
-  #
-  chmod +x /home/pi/${GoFile}
-  #
-  TIME8=${SECONDS}
-  echo
-  echo "Elapsed time:"
-  printms ${TIME8} "8. Load go-raspi"
-  echo "--------------------------------------------------------------"
-  echo
-  sleep 3
-  echo
-  echo "Now ready to exec GOTHINGS CONTROL MENU"
-  echo "    NOTE: if you continue the GOTHINGS CONTROL MENU will be executed"
-  echo
-  echo -e "    ${RED}  ATTENTION !!  ${STD} "
-  echo "    continue will bring you to the GOTHINGS CONTROL MENU"
-  echo "    exit return back to the console prompt"
-  echo
-  avanti
-  ./${GoFile}
-  echo "exit from 0 / boot install"
-  MENUTRAP=66
-}
 #
 ###################################################################
 #
 
-
+#wget -O ~/localserverdirs.tar.gz https://github.com/fpirri/gothings-localserver/blob/master/localserverdirs.tar.gz
 
 
 #

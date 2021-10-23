@@ -98,19 +98,22 @@ dots_nl(){ #  Dots 'new line'
 #
 ################################################################################
 #                                                                avvisi iniziali
-echo
 echo "This script downloads the archive:"
 echo "  localserver.tar.gz"
 echo "from github and expand it to the ~/dockrepo directory of this machine."
 echo
 echo "Please read the README.md file on"
-echo "  https://github.com/fpirri/gothings-localserver"
+echo "  https://github.com/fpirri/gothings-localserver#readme"
 echo "for an explanation of the operations that will be performed."
+echo
 echo "At the end, the user will be able to verify the operations carried out"
 echo "and execute the script for creating the local web server."
 echo "Your sudo password will be asked for in the following."
 echo
 echo "You should have Docker installed on your system."
+echo
+pause
+echo
 echo "Let's verify the docker installation:"
 sudo docker version
 DockerOk=$?
@@ -138,6 +141,8 @@ echo
 wget -O ${LocalFile} $GitFile
 echo
 if [[ -s $LocalFile ]]; then
+  echo
+  dots 3
   echo "The archive file exists, you can expand it"
 else
   echo "File $LocalFile not found, stop processing"
@@ -146,66 +151,64 @@ else
   echo "-------"
   exit
 fi
-dots 3
-echo " domanda di espansione DA FARE"
-
-
-exit
-#   si espande l'archivio
-
-sudo tar xpf "${LocalFile}" -C "$HomeDir" #   si espande l'archivio
-
-
-
-pause
-echo "verifica l'espansione"
-echo ""
-return 1
-exit
-
-
-#
-##########################################################################
-#
-###################################################################
-#
-
-#wget -O ~/localserverdirs.tar.gz https://github.com/fpirri/gothings-localserver/blob/master/localserverdirs.tar.gz
-
-
+echo
+read -rsp "Do you like to EXPAND the archive into ~/dockrepo ? [y/N] " -n 1 key
+case "$key" in
+    [yY]) 
+      echo
+      echo "Expand into ~/dockrepo ..."
+      echo
+      sudo tar xpf "${LocalFile}" -C "$HomeDir"
+      echo
+      echo "Done."
+      echo
+      ;;
+    *)
+      echo
+      echo "Nothing do, back to console"
+      dots 2
+      exit
+      ;;
+esac
 #
 ################################################################################
 #                                                  creazione dei docker networks
 echo ""
-echo "Creazione dei docker networks for gothings"
-echo ""
+echo "Create docker networks for gothings"
 echo
+echo "Please note that the following will show 'already exists' warnings"
+echo "if this section is started multiple times." 
+echo "These warnings are not influential."
 echo
 echo "- gothingsnet"
 sudo docker network create -d bridge --subnet 172.29.196.0/24 --gateway 172.29.196.1 gothingsnet  
 echo "- servicenet"
 sudo docker network create -d bridge --subnet 172.29.195.0/24 --gateway 172.29.195.1 servicenet
 echo 
-
 #
 ################################################################################
-#                                                        
-
-echo ""
-echo ""
-echo ""
-pause
-echo ""
-echo ""
-return 1
-exit
-
-
-#
-################################################################################
-#                                                        
-
-    echo ""
-    return 1
+#                                                              exec start script
+echo
+echo "You may like to immediately start the localserver container."
+echo
+read -rsp "Do you like to start the localserver now ? [y/N] " -n 1 key
+case "$key" in
+  [yY]) 
+    echo
+    echo "fingi che sia effettivamente partito ...."
+    echo
+    echo "Done."
+    echo
+    ;;
+  *)
+    echo
+    echo
+    echo "Nothing to do, back to console"
+    dots 2
+    echo
     exit
-
+    ;;
+esac
+#
+################################################################################
+#

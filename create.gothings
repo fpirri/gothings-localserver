@@ -45,7 +45,8 @@ HomeDir=~/
 DockDir="${HomeDir}dockrepo/"
 AppDir="${DockDir}sysdata/${AppName}/"
 FileName="localserverdirs.tar.gz"
-GitFile="https://github.com/fpirri/gothings-localserver/blob/master/${FileName}"
+#        https://github.com/fpirri/gothings-localserver/raw/main/localserverdirs.tar.gz
+GitFile="https://github.com/fpirri/gothings-localserver/raw/main/${FileName}"
 LocalFile="${HomeDir}${FileName}"
 # ----------------------------------
 # costanti varie
@@ -167,6 +168,7 @@ case "$key" in
       echo
       echo "Nothing do, back to console"
       dots 2
+      echo
       exit
       ;;
 esac
@@ -195,7 +197,8 @@ read -rsp "Do you like to start the localserver now ? [y/N] " -n 1 key
 case "$key" in
   [yY]) 
     echo
-    echo "fingi che sia effettivamente partito ...."
+    echo "Start localserver ...."
+    ./dockrepo/start_localserver
     echo
     echo "Done."
     echo
